@@ -1,0 +1,9 @@
+{
+  "name": "ed-utils",
+  "version": "0.0.1",
+  "description": "common utilities",
+  "main": "src/index.js",
+  "repository": "https://github.com/elizandrodantas/ed-utils",
+  "author": "elizandrodantas <dantaspm@icloud.com>",
+  "license": "Apache-2.0 license"
+}
