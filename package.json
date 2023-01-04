@@ -5,5 +5,17 @@
   "main": "src/index.js",
   "repository": "https://github.com/elizandrodantas/ed-utils",
   "author": "elizandrodantas <dantaspm@icloud.com>",
-  "license": "Apache-2.0 license"
+  "license": "Apache-2.0 license",
+  "scripts": {
+    "test": "tap"
+  },
+  "tap": {
+    "coverage-map": "map.js"
+  },
+  "dependencies": {
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "tap": "^16.3.2"
+  }
 }
