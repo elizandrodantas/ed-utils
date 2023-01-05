@@ -1,6 +1,6 @@
 {
   "name": "ed-utils",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "common utilities",
   "main": "src/index.js",
   "repository": "https://github.com/elizandrodantas/ed-utils",
