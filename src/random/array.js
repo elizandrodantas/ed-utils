@@ -1,4 +1,4 @@
-const random = require(".");
+const { number } = require("./number");
 const { isArray } = require("../validator/typeof");
 
 /**
@@ -10,7 +10,7 @@ const { isArray } = require("../validator/typeof");
 
 function array(array){
     if(isArray(array)){
-        return array[random(array.length)];
+        return array[number(array.length)];
     }
 
     return null;
