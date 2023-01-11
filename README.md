@@ -1,12 +1,10 @@
-# ED-Util
+<div align="center">
+    <h2>ED Utils</h2>
+</div>
 
 set of functions that are constantly used in by me all the time
 
-<br/>
-
-## Utilities:
-
-<br/>
+## Utilities :coffee:
 
 ### Validators
 

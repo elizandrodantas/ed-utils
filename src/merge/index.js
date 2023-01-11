@@ -1,8 +1,8 @@
 /**
- * 
+ *
  * @template T, K
- * @param {T} target 
- * @param {K} sources 
+ * @param {T} target
+ * @param {K} sources
  * @return {T & K}
  */
 
@@ -13,10 +13,10 @@ function assign(target, sources){
 exports.assign = assign;
 
 /**
- * 
+ *
  * @template T, K
- * @param {T} options 
- * @param {K} defaults 
+ * @param {T} options
+ * @param {K} defaults
  * @return {K & T}
  */
 
