@@ -16,6 +16,8 @@ set of functions that are constantly used in by me all the time
 - isPhone
 - isUuidv4
 
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/validator)
+
 ### Random
 
 - randomArray
@@ -24,10 +26,14 @@ set of functions that are constantly used in by me all the time
 - randomObjectId
 - randomUuidv4
 
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/random)
+
 ### Merge
 
 - merge
 - assign
+
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/merge)
 
 ### Extract
 
@@ -35,9 +41,13 @@ set of functions that are constantly used in by me all the time
 - getAllNumber
 - getString
 
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/extract)
+
 ### Curl
 
 - curl
+
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/curl)
 
 ### Convert
 
@@ -45,7 +55,11 @@ set of functions that are constantly used in by me all the time
 - NumberToStr
 - Mask
 
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/convert)
+
 ### Base64
 
 - encode64
 - decode64
+
+[more details](https://github.com/elizandrodantas/ed-utils/tree/main/src/base64)
