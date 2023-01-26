@@ -44,9 +44,9 @@ exports.deleteFolder = deleteFolder;
  * @param {string} file_name
  */
 
-function createFile(file_name){
+function createFile(file_name, data = null){
     if(!exist(file_name)){
-        writeFileSync(file_name, "");
+        writeFileSync(file_name, data || "");
     }
 }
 
