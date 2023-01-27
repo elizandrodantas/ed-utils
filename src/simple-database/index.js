@@ -41,10 +41,15 @@ function Simple(schema, options){
 
     options = merge(options, defaults);
 
+    schema.setOptions(options)
+
     this.schema = schema;
     this.options = {};
 
-    this.schema.setOptions(options);
+    if(!this.schema.validator()){
+        throw new Error("SimpleDatabase: invalid schema (every schema must contain a type)");
+    }
+
     this.setOptions(options);
 
     this.folder = isString(options?.folder) ? options?.folder : 'database';
