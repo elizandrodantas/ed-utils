@@ -86,6 +86,13 @@ Find.prototype.$dataSchemaNull = function(data, schema){
     }
 }
 
+/**
+ *
+ * @param {Object.<string, unknown>[]} data
+ * @param {Object.<string, unknown>} condition
+ * @return {void | null | Object.<string, unknown> }
+ */
+
 Find.prototype.where = function(data, condition){
     const keys = Object.keys(condition);
 
@@ -106,24 +113,29 @@ Find.prototype.where = function(data, condition){
                 data[indice] = undefined;
             }
         }
+
+        return;
     }else{
-        let mutual = 0,
-            _index = null;
+        let _index = null;
 
-        data.reverse();
+        for(let indice = 0; indice < data.length; indice++){
+            const k = Object.keys(data[indice]);
+            let m = 0;
 
-        for(let wh in condition){
-            for(let element of data){
-                if(!isUndefined(condition[wh]) && condition[wh] == element[wh]){
-                    mutual++;
-                    _index = element;
-                    break;
+            for(let i of k){
+                if(keys.includes(i)){
+                    this.where$once(data[indice][i], condition[i]) && m++;
                 }
+            }
+
+            if(m === len){
+                _index = data[indice];
+                break;
             }
         }
 
 
-        return _index
+        return _index;
     }
 }
 
