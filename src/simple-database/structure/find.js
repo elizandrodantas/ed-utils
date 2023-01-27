@@ -13,6 +13,7 @@ const { isNumber, isUndefined, isArray, isObject, isString } = require("../../va
  */
 
 function Find(data, where, options, type = "one", schema){
+    this._t = type;
 
     if(type == "many"){
         isObject(where) &&  Object.keys(where).length > 0 && this.where(data, where);
@@ -37,7 +38,6 @@ function Find(data, where, options, type = "one", schema){
 
     this.$dataSchemaNull(data, schema);
     this.data = data;
-    this._t = type;
 }
 
 /**
@@ -60,9 +60,31 @@ Find.prototype.limit = function(len){
     return this;
 }
 
+/**
+ *
+ * @return {number}
+ */
+
+Find.prototype.count = function(){
+    return this._t == "many" ?
+        this.data.length : this.data ? 1 : 0;
+}
+
+/**
+ *
+ * @return {Object.<string, unknown> | Object.<string, unknown>[]}
+ */
+
 Find.prototype.get = function(){
     return this.data;
 }
+
+/**!
+ *
+ * @param {Object.<string, unknown>} data
+ * @param {Object.<string, unknown>} schema
+ * @private
+ */
 
 Find.prototype.$dataSchemaNull = function(data, schema){
     const keys = Object.keys(schema);
@@ -86,11 +108,12 @@ Find.prototype.$dataSchemaNull = function(data, schema){
     }
 }
 
-/**
+/**!
  *
  * @param {Object.<string, unknown>[]} data
  * @param {Object.<string, unknown>} condition
  * @return {void | null | Object.<string, unknown> }
+ * @private
  */
 
 Find.prototype.where = function(data, condition){
@@ -139,10 +162,12 @@ Find.prototype.where = function(data, condition){
     }
 }
 
-    /**
+    /**!
      *
      * @param {unknown} value
      * @param {Object.<string, unknown> | unknown} condition
+     * @return {boolean}
+     * @private
      */
 
     Find.prototype.where$once = function(value, condition){
