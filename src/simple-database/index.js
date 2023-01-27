@@ -109,9 +109,19 @@ Simple.prototype.create = async function(data){
 }
 
 /**
+ *
+ * @typedef {object} IFindFilterAdditional
+ * @property {any} not
+ * @property {any} include
+ * @property {any} match
+ * @property {number} gt
+ * @property {number} lt
+ */
+
+/**
  *  interface find filter
  *
- * @typedef {Object.<string, unknown>} IFindFilter
+ * @typedef {Object.<string, any> | Object.<string, IFindFilterAdditional>} IFindFilter
  */
 
 /**
