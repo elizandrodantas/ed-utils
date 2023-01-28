@@ -223,8 +223,6 @@ class Curl {
     async request(){
         const { options } = this;
 
-        console.log(this.options)
-
         try{
             if(!isObject(options))
                 throw new Error("options type invalid");
