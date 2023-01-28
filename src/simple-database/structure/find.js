@@ -21,7 +21,7 @@ function Find(data, where, options, type = "one", schema){
 
         if(isNumber(offset)){
             if(offset > data.length){
-                throw new Error("SimpleDatabase: offset is greater than the number of dice");
+                throw new Error("offset is greater than the number of dice");
             }
 
             data = data.slice(
@@ -190,11 +190,11 @@ Find.prototype.where = function(data, condition){
                 }else{
                     throw new Error("data must be a string or array to condition include");
                 }
-            }else if(gt){
+            }else if(isNumber(gt)){
                 if(gt < value){
                     return true;
                 }
-            }else if(lt){
+            }else if(isNumber(lt)){
                 if(lt > value){
                     return true;
                 }

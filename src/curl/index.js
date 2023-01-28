@@ -1,6 +1,8 @@
 const request = require('request');
 const { assign } = require('../merge');
 const { isObject, isNumber, isString } = require('../validator');
+const { constants } = require('node:crypto');
+const { parse: parseUrl } = require('node:url');
 
 const defaults = {
     rate: 10,
@@ -8,13 +10,13 @@ const defaults = {
 }
 
 class Curl {
-    /** @typedef {{ rate: number }} ICurlAdditionalOption*/
+    /** @typedef {{ rate: number, resolveTLS: boolean }} ICurlAdditionalOption*/
     /** @typedef {request.CoreOptions & request.UrlOptions & ICurlAdditionalOption} ICurlRequest */
     /** @typedef {{ error: any, response: request.Response, body: any }} ICurlResponse */
 
     /**
-     * 
-     * @param {ICurlRequest} options 
+     *
+     * @param {ICurlRequest} options
      */
 
     constructor(options){
@@ -26,10 +28,12 @@ class Curl {
 
         /** @type {ICurlRequest} */
         this.options = options;
+
+        options?.resolveTLS && this.use$resolveTLS();
     }
 
     /**
-     * 
+     *
      * @return {ICurlRequest}
      */
 
@@ -38,14 +42,17 @@ class Curl {
     }
 
     /**
-     * 
-     * @param  {ICurlRequest} opt 
+     *
+     * @param  {ICurlRequest} opt
      * @return {Curl}
      */
 
     setOptions(opt){
         if(opt && isObject(opt))
             this.options = assign(this.options, opt);
+
+
+        this.options?.resolveTLS && this.use$resolveTLS();
 
         return this;
     }
@@ -57,7 +64,7 @@ class Curl {
      */
 
     /**
-     * 
+     *
      * @return {Promise<ICurlResponse>}
      */
 
@@ -69,8 +76,8 @@ class Curl {
     }
 
     /**
-     * 
-     * @param {ICurlRequest} options 
+     *
+     * @param {ICurlRequest} options
      * @return {Promise<ICurlResponse>}
      */
 
@@ -82,7 +89,7 @@ class Curl {
             throw new Error("url required in options");
 
         if(!isString(options?.method) || options.method?.toLowerCase() !== "get")
-            this.options = assign(options, { method: "GET" });
+            options = assign(options, { method: "GET" });
 
         const _curl = new Curl(options);
 
@@ -96,7 +103,7 @@ class Curl {
      */
 
     /**
-     * 
+     *
      * @return {Promise<ICurlResponse>}
      */
 
@@ -108,8 +115,8 @@ class Curl {
     }
 
     /**
-     * 
-     * @param {ICurlRequest} options 
+     *
+     * @param {ICurlRequest} options
      * @return {Promise<ICurlResponse>}
      */
 
@@ -121,7 +128,7 @@ class Curl {
             throw new Error("url required in options");
 
         if(!isString(options?.method) || options.method?.toLowerCase() !== "post")
-            this.options = assign(options, { method: "POST" });
+            options = assign(options, { method: "POST" });
 
         const _curl = new Curl(options);
 
@@ -135,7 +142,7 @@ class Curl {
      */
 
     /**
-     * 
+     *
      * @return {Promise<ICurlResponse>}
      */
 
@@ -147,8 +154,8 @@ class Curl {
     }
 
     /**
-     * 
-     * @param {ICurlRequest} options 
+     *
+     * @param {ICurlRequest} options
      * @return {Promise<ICurlResponse>}
      */
 
@@ -160,7 +167,7 @@ class Curl {
             throw new Error("url required in options");
 
         if(!isString(options?.method) || options.method?.toLowerCase() !== "put")
-            this.options = assign(options, { method: "PUT" });
+            options = assign(options, { method: "PUT" });
 
         const _curl = new Curl(options);
 
@@ -174,7 +181,7 @@ class Curl {
      */
 
     /**
-     * 
+     *
      * @return {Promise<ICurlResponse>}
      */
 
@@ -186,8 +193,8 @@ class Curl {
     }
 
     /**
-     * 
-     * @param {ICurlRequest} options 
+     *
+     * @param {ICurlRequest} options
      * @return {Promise<ICurlResponse>}
      */
 
@@ -199,7 +206,7 @@ class Curl {
             throw new Error("url required in options");
 
         if(!isString(options?.method) || options.method?.toLowerCase() !== "delete")
-            this.options = assign(options, { method: "DELETE" });
+            options = assign(options, { method: "DELETE" });
 
         const _curl = new Curl(options);
 
@@ -207,51 +214,72 @@ class Curl {
     }
 
 
-    
+
     /**
-     * 
+     *
      * @return {Promise<ICurlResponse>}
      */
 
     async request(){
         const { options } = this;
 
+        console.log(this.options)
+
         try{
             if(!isObject(options))
                 throw new Error("options type invalid");
-    
+
             if(!options.rate || !isNumber(options.rate) || options.rate < 1)
                 options.rate = defaults.rate;
-    
+
             if(!options.timeout || !isNumber(options.timeout) || options.timeout < 1000)
                 options.timeout = defaults.timeout;
-    
+
             return new Promise(async resolve => {
-                
+
                 /**
-                * 
+                *
                 * @param {ICurlRequest} options
                 * @return {Promise<ICurlResponse>}
                 */
-    
+
                 function _(options){
                     return new Promise(res => request(options, (error, response, body) => {
                         try { body = JSON.parse(body) } catch(__) {}
-    
+
                         return res({ error, response, body });
                     }));
                 }
-    
+
                 for (let index = 0; index < options.rate; index++) {
                     var response = await _(options);
-                    
+
                     if(!response?.error && response?.response?.statusCode) break;
                 }
-    
+
                 return resolve(response);
             });
         }catch(err){
             return { error: err, response: {}, body: null }
+        }
+    }
+
+    /**!
+     *  TLS Resolve error [unsafe legacy renegotiation disabled]
+     *  @private
+     */
+
+    use$resolveTLS(){
+        const { url } = this.options;
+
+        const { protocol } = parseUrl(url || "");
+
+        if(protocol){
+            const [ name ] = protocol.split(':');
+
+            if(name === "https"){
+                this.options = assign(this.options, { secureOptions: constants.SSL_OP_LEGACY_SERVER_CONNECT });
+            }
         }
     }
 }
